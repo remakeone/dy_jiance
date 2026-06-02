@@ -662,47 +662,28 @@ if __name__ == '__main__':
         'http': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
         'https': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
         }
-    area='+1'
-    phone='16727729828'
+    area='+'
+    phone='14384445076'
   #   device = device_register(proxies=proxies)  # 注册设备
-  #   device =         {
-  #     "iid": "3594723665117636",
-  #     "install_id": "3594723665117636",
-  #     "device_id": "3594723665932724",
-  #     "secDeviceToken": "AoUETJ5X6e_qdszVTT3VBcHQC",
-  #     "device_token": "AAAVPA5EM7GX3VXXRP27ZVT7JKFEFRHLF5DQQPN7HCG5QTKVHX2TOE7DSDMH6JOGYW65U4RKDTDBWBFBQ772FDFBQ2SQ4VIBVABKXVTSHTLMNZQK2AWOKVQWCLCFC",
-  #     "channel": "update",
-  #     "os_version": "10",
-  #     "os_api": 29,
-  #     "device_model": "OPPO A59s",
-  #     "device_type": "OPPOA59s",
-  #     "device_brand": "OPPO",
-  #     "device_manufacturer": "HUAWEI",
-  #     "cpu_abi": "arm64-v8a",
-  #     "density_dpi": 480,
-  #     "display_density": "xxhdpi",
-  #     "resolution": "2310×1080",
-  #     "rom": "1576670525",
-  #     "rom_version": "full_oppo6750_15131-user 5.1 LMY47I 1576670525 dev-keys",
-  #     "cdid": "34299452-9e34-452c-9906-cd8a86aa4c04",
-  #     "openudid": "3866589bcf267391",
-  #     "clientudid": "f60b7daa-d3ed-46d7-b2dc-987d22504c2b",
-  #     "serial_number": "",
-  #     "sim_serial_number": None,
-  #     "launcherReferrer": "com.huawei.android.launcher",
-  #     "fingerprint": "HUAWEI/JNY-AL10/HWJNY:10/HUAWEIJNY-AL10/10.1.0.237C00:user/release-keys",
-  #     "platform": "kirin810",
-  #     "event": "caijing_initialization"
-  #   }
+    device = {"install_id": "1325331944583875", "device_id": "1325331944579779", "secDeviceToken": "AvBZdrKW2BWURRNxkIZdrhUbD",
+              "device_token": "AAA6HFWWLSJTFZ2KCOVMG72TQXC7AHC7AXZHQYCPOGXYQ5OA4JZPKFDPQDHD2KF5MTHDNBMSU3MFR3FOYMSV73HDNG7PHWSLBOGHOIILZY7NF6E4QZNT5KWLJCJ7S",
+              "channel": "huawei_1128_free", "os_version": "13", "os_api": 33, "device_model": "V2244A",
+              "device_type": "V2244A", "device_brand": "vivo", "device_manufacturer": "vivo", "cpu_abi": "arm64-v8a",
+              "density_dpi": 480, "display_density": "xxhdpi", "resolution": "2400×1080",
+              "rom": "eng.compil.20230104.233131",
+              "rom_version": "qssi-user 13 TP1A.220624.014 eng.compil.20230104.233131 release-keys",
+              "cdid": "78c9ad45-c454-4bdb-b1ef-87251c116c8e", "openudid": "504a4fdc1691f62b",
+              "clientudid": "7c512082-e902-4fad-833a-86eafde9518c", "serial_number": "", "sim_serial_number": None,
+              "launcherReferrer": "com.bbk.launcher2",
+              "fingerprint": "vivo/PD2244/PD2244:13/TP1A.220624.014/compiler01042331:user/release-keys",
+              "platform": "kona", "event": "caijing_initialization"}
 
-
-
-    device = {
-        'install_id': '2996589340406456',
-        'device_id': '2996589340402360',
-        'channel':"360_1128_new_64"
-        # 'device_id': '1677175443962540',
-    }
+    # device = {
+    #     'install_id': '1325331944583875',
+    #     'device_id': '2996589340402360',
+    #     'channel':"360_1128_new_64"
+    #     # 'device_id': '1677175443962540',
+    # }
     logger.debug(f'设备注册结果：{device}')
     for phone in lis:
         phone = '16727729829'
