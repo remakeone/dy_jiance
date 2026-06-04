@@ -305,6 +305,8 @@ def exc_result(data):
         result = "老号"
     elif error_code in [2036]:
         result = "新号"
+    elif error_code in [1105]:  # 出滑块了,是新号
+        result = "新号"
     else:
         result = "未知"
         remark = data
@@ -312,19 +314,25 @@ def exc_result(data):
 
 
 def check_new_old(area,phone,proxies_mode, proxies_url,output_lis = None):
-    try:
-        proxies = get_proxies(proxies_url,proxies_mode)
-        logger.info(f"开始检查手机号{area}{phone}，代理：{proxies}")
-        result = api_send_code(f"{area}{phone}",proxies)
-        result,description,remark = exc_result(result)
 
-        if output_lis is not None:
-            output_lis.append((phone, result,description,remark))
-        return phone, result,description,remark
-    except Exception as e:
-        if output_lis is not None:
-            output_lis.append((phone, "查询异常","",str(e)))
-        return phone,"查询异常","",str(e)
+    for i in range(3):
+        try:
+            proxies = get_proxies(proxies_url,proxies_mode)
+            logger.info(f"开始检查手机号{area}{phone}，代理：{proxies}")
+            result = api_send_code(f"{area}{phone}",proxies)
+            # print(result)
+            result,description,remark = exc_result(result)
+
+            if output_lis is not None:
+                output_lis.append((phone, result,description,remark))
+            return phone, result,description,remark
+        except Exception as e:
+            logger.error(f"检查手机号{area}{phone}，第{i}次，错误信息：{e}")
+            pass
+    if output_lis is not None:
+        output_lis.append((phone, "查询异常", "", str(e)))
+    return phone, "查询异常", "", str(e)
+
 
 
 def run():
@@ -372,19 +380,20 @@ def run():
 
 
 if __name__ == '__main__':
-    try:
-        run()
-    except Exception as e:
-        logger.error(f"运行异常，错误信息：{traceback.format_exc()}")
-        exit()
-
-    input(f"请输入任意内容结束")
+    # try:
+    #     run()
+    # except Exception as e:
+    #     logger.error(f"运行异常，错误信息：{traceback.format_exc()}")
+    #     exit()
+    #
+    # input(f"请输入任意内容结束")
     # print(generate_random_hex(32))
-    # phone = '+19429996012'
-    # proxies = {
-    #     # 'http': 'http://127.0.0.1:7890',
-    #     # 'https': 'http://127.0.0.1:7890',
-    #     'http': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
-    #     'https': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
-    # }
-    # print(check_new_old(phone, proxies))
+    phone = '19429996012'
+    proxies = {
+        # 'http': 'http://127.0.0.1:7890',
+        # 'https': 'http://127.0.0.1:7890',
+        'http': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
+        'https': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
+    }
+    proxies_url = "http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030"
+    print(check_new_old('+',phone,2, proxies_url,[]))

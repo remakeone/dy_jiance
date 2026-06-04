@@ -8,7 +8,7 @@ from flurl3.core import core_sixgod
 from module.error.error import RetryException
 import requests,time,hashlib
 from module.six_god2.core import sign_android
-from flurl3.device_register import device_register
+# from flurl3.device_register import device_register
 from module.six_god1.captcha import ByteDanceCaptchaAndroid
 
 
@@ -16,30 +16,63 @@ logger.add("log/log_new.log", rotation="100 MB", retention="1 week", encoding="u
            format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | Thread: {thread} | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
            )
 
-def api_slide_test(verify_center_decision_conf, iid, did, proxies,retry = 0):
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
+
+def device_register(proxies):
+    response = requests.get("http://154.23.189.16:31818/device/v1/0602/getDevice")
+    res_json = response.json()
+    res_json['install_id'] = res_json['iid']
+    return res_json
+
+
+# def api_slide_test(verify_center_decision_conf, iid, did, proxies,retry = 0):
+#     headers = {
+#         'Accept': 'application/json',
+#         'Content-Type': 'application/json',
+#     }
+#
+#     json_data = {
+#         'device_id': did,
+#         'iid': iid,
+#         'proxy_ip': proxies['https'].replace("http://","" ) if proxies else "",
+#         # 'proxy_ip': "",
+#         'verify_str': verify_center_decision_conf
+#     }
+#     # print(json_data)
+#
+#     response = requests.post('http://8.148.67.111:19000/api/god/slider/android', headers=headers, json=json_data)
+#
+#     if response.json()['data'] == '验证失败':
+#         if retry < 3:
+#             return api_slide_test(verify_center_decision_conf, iid, did, proxies,retry+1)
+#         else:
+#             raise RetryException(f"滑块异常，重试3次失败,{response.json()}")
+#
+#     return response.json()
+
+
+def api_slide_test(detail, lod_id, iid, did, proxies):
+    data = {
+        "uid": "dea889cd-d1e9-46ab-a2ac-71adcbc1156b",
+        "service_name": "dy_android_slide_api",
+        "aid": "1128",
+        "detail": detail,
+        "log_id": lod_id,
+        "server_sdk_env": "{\"idc\":\"lf\",\"region\":\"CN\",\"server_type\":\"passport\"}",
+        "proxies": proxies,
+        "device_dict": {
+            "did": did,
+            "iid": iid
+        }
     }
-
-    json_data = {
-        'device_id': did,
-        'iid': iid,
-        'proxy_ip': proxies['https'].replace("http://","" ) if proxies else "",
-        # 'proxy_ip': "",
-        'verify_str': verify_center_decision_conf
+    url = 'http://180.97.215.147:9954/api/douyin/slide/android'
+    header = {
+        "Content-Type": "application/json"
     }
-    # print(json_data)
-
-    response = requests.post('http://8.148.67.111:19000/api/god/slider/android', headers=headers, json=json_data)
-
-    if response.json()['data'] == '验证失败':
-        if retry < 3:
-            return api_slide_test(verify_center_decision_conf, iid, did, proxies,retry+1)
-        else:
-            raise RetryException(f"滑块异常，重试3次失败,{response.json()}")
-
+    response = requests.post(url, json=data, timeout=20, headers=header)
+    print(response.text)
     return response.json()
+
+
 
 def get_proxies(api_url):
     # api_url =
@@ -114,6 +147,96 @@ def py_account_password(area: str, val: str):
     return "".join([map_[i] for i in area+" "+val])
 
 
+def exc_face_verify(not_login_ticket,proxies):
+    url = "https://aggr5-normal-s12.amemv.com/passport/safe/query_decision/"
+    params = {
+        "passport-sdk-version": "60571",
+        "request_from_account_sdk": "1",
+        "is_from_ttaccountsdk": "1",
+        "sec_sdk_version": "67764480",
+        "ttnet_sdk_version": "4.2.278.8-douyin",
+        "auth_sdk_version": "4.7.5",
+        "account_flow": "verify",
+        "account_app_language": "zh",
+        "verify_sdk_version": "4.1.3.cn",
+        "verify_scene": "find_account",
+        "language": "zh",
+        "not_login_ticket": not_login_ticket,
+        "hide_mobile_by_region": "true",
+        "multi_login": "1",
+        "account_sdk_source": "app",
+        "passport_support_flow": "choose_account,captcha,real_name_check,verify",
+        "klink_egdi": "AAKm_yCa2llmlc_Hv7NG6_ZUe47wGUYo8zlW-h0QcBlCVei4Iv2IPrYS",
+        "iid": "1290145667507628",
+        "device_id": "2728334246030979",
+        "ac": "wifi",
+        "channel": "huoshan_fans_page_douyin",
+        "aid": "1128",
+        "app_name": "aweme",
+        "version_code": "380900",
+        "version_name": "38.9.0",
+        "device_platform": "android",
+        "os": "android",
+        "ssmix": "a",
+        "device_type": "AOSP on taimen",
+        "device_brand": "Android",
+        "os_api": "30",
+        "os_version": "11",
+        "manifest_version_code": "380901",
+        "resolution": "1440*2712",
+        "dpi": "560",
+        "update_version_code": "38909900",
+        "_rticket": "1780499067509",
+        "package": "com.ss.android.ugc.aweme",
+        "first_launch_timestamp": "1780331169",
+        "last_deeplink_update_version_code": "0",
+        "cpu_support64": "true",
+        "host_abi": "arm64-v8a",
+        "is_guest_mode": "0",
+        "app_type": "normal",
+        "minor_status": "0",
+        "appTheme": "light",
+        "is_preinstall": "0",
+        "need_personal_recommend": "1",
+        "is_android_pad": "0",
+        "is_android_fold": "0",
+        "ts": "1780499099",
+        "cdid": "a928357e-4b19-4e4f-83ff-4a101ce7d4a6",
+        "cronet_version": "5e677c20_2026-03-23",
+        "ttnet_version": "4.2.278.4-douyin",
+        "use_store_region_cookie": "1"
+    }
+    headers = {
+        'User-Agent': "com.ss.android.ugc.aweme/380901 (Linux; U; Android 11; zh_CN_#Hans; AOSP on taimen; Build/RP1A.200720.009; Cronet/TTNetVersion:e3d16265 2026-05-11 QuicVersion:afeca321 2026-04-27)",
+        'contenttype': "application/x-www-form-urlencoded",
+        'activity_now_client': "1780499100134",
+        'x-tt-passport-verify-portrait-outer': "dc93467e-c6cd-4472-b9cd-b4800ec81283.find_account",
+        'passport-sdk-settings': "x-tt-token,sec_user_id,device_transfer_s_0,device_transfer_ab_2",
+        'passport-sdk-sign': "x-tt-token,sec_user_id",
+        'bd-ticket-guard-tee-status': "1",
+        'sdk-version': "2",
+        'bd-ticket-guard-iteration-version': "2",
+        'x-tt-passport-trace-id': "find_account_e3d8553f5f764185b6b4e88b7ebf1e5f",
+        'x-tt-passport-verify-portrait': "39e28c69-24fe-4f83-9bec-57e010e0a052.find_account",
+        'passport-sdk-version': "60571",
+        'x-ss-req-ticket': "1780499067514",
+        'x-vc-bdturing-sdk-version': "4.1.3.cn",
+        'x-tt-request-tag': "s=-1;p=0",
+        'x-tt-ttnet-origin-host': "api5-normal-lq.amemv.com",
+        'x-ss-dp': "1128",
+        'x-tt-trace-id': "01-8e03b4260d9b167d1902e83ffc630468-8e03b4260d9b167d-00",
+    }
+
+    for i in range(3):
+        try:
+            response = requests.get(url, params=params, headers=headers, proxies=proxies)
+            return response.json()["data"]["event_params"]["verify_reason"]
+        except:
+            pass
+
+    return '实名查询异常'
+
+
 def handle_result(proxies, result, area, phone, result_dict: dict):
     """处理返回的结果并保存到文件。"""
 
@@ -169,6 +292,7 @@ def handle_result(proxies, result, area, phone, result_dict: dict):
                 status = "封禁号"
             else:
                 status = "正常老号"
+                has_face_verify = exc_face_verify(account["not_login_ticket"], proxies)
             result_dict.update({phone: {
                 "area": area,
                 "phone": phone,
@@ -379,13 +503,13 @@ def query_phone(device, area_phone=None,card_name=None, card=None, proxies=None)
             # hk = ByteDanceCaptchaAndroid(did=device['device_id_str'], iid=device['install_id_str'],
             #                              detail=json.loads(response_data['data']['verify_center_decision_conf'])[
             #                                  'detail'],proxy=proxies).verify_track()
-            verify_center_decision_conf = response.json()['data']['verify_center_decision_conf']
-            hk = api_slide_test(verify_center_decision_conf,str(device['install_id']), str(device['device_id']), proxies)
+            verify_center_decision_conf = json.loads(response.json()['data']['verify_center_decision_conf'])
+            # hk = api_slide_test(verify_center_decision_conf,str(device['install_id']), str(device['device_id']), proxies)
+            hk = api_slide_test(verify_center_decision_conf['detail'], verify_center_decision_conf['log_id'],
+                                str(device['install_id']), str(device['device_id']), proxies)
 
             # print(hk)
             logger.debug(f"滑块返回值：{hk}")
-            # if hk['code'] == 502:
-            #     raise RetryException("ip异常，重试")
             if "code" in hk and hk['code'] == 200:
                 response = requests.post(
                     url=sign_urls,
@@ -395,6 +519,28 @@ def query_phone(device, area_phone=None,card_name=None, card=None, proxies=None)
                     timeout=25,
                     verify=False
                 )
+                # print(response.json())
+                if 'data' in response.json() and response.json()['data'].get('error_code') == 1105:
+                    logger.info(f"需要过滑块")
+                    # hk = ByteDanceCaptchaAndroid(did=device['device_id_str'], iid=device['install_id_str'],
+                    #                              detail=json.loads(response_data['data']['verify_center_decision_conf'])[
+                    #                                  'detail'],proxy=proxies).verify_track()
+                    verify_center_decision_conf = json.loads(response.json()['data']['verify_center_decision_conf'])
+                    # hk = api_slide_test(verify_center_decision_conf,str(device['install_id']), str(device['device_id']), proxies)
+                    hk = api_slide_test(verify_center_decision_conf['detail'], verify_center_decision_conf['log_id'],
+                                        str(device['install_id']), str(device['device_id']), proxies)
+
+                    # print(hk)
+                    logger.debug(f"滑块返回值：{hk}")
+                    if "code" in hk and hk['code'] == 200:
+                        response = requests.post(
+                            url=sign_urls,
+                            headers=sign_headers,
+                            data=data,
+                            proxies=proxies,
+                            timeout=25,
+                            verify=False
+                        )
                 logger.success("滑块成功")
                 return response.json()
             else:
@@ -662,21 +808,21 @@ if __name__ == '__main__':
         'http': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
         'https': 'http://1342522532909436928:4FA258Uu@http-dynamic-S02.xiaoxiangdaili.com:10030',
         }
-    area='+'
-    phone='14384445076'
-  #   device = device_register(proxies=proxies)  # 注册设备
-    device = {"install_id": "1325331944583875", "device_id": "1325331944579779", "secDeviceToken": "AvBZdrKW2BWURRNxkIZdrhUbD",
-              "device_token": "AAA6HFWWLSJTFZ2KCOVMG72TQXC7AHC7AXZHQYCPOGXYQ5OA4JZPKFDPQDHD2KF5MTHDNBMSU3MFR3FOYMSV73HDNG7PHWSLBOGHOIILZY7NF6E4QZNT5KWLJCJ7S",
-              "channel": "huawei_1128_free", "os_version": "13", "os_api": 33, "device_model": "V2244A",
-              "device_type": "V2244A", "device_brand": "vivo", "device_manufacturer": "vivo", "cpu_abi": "arm64-v8a",
-              "density_dpi": 480, "display_density": "xxhdpi", "resolution": "2400×1080",
-              "rom": "eng.compil.20230104.233131",
-              "rom_version": "qssi-user 13 TP1A.220624.014 eng.compil.20230104.233131 release-keys",
-              "cdid": "78c9ad45-c454-4bdb-b1ef-87251c116c8e", "openudid": "504a4fdc1691f62b",
-              "clientudid": "7c512082-e902-4fad-833a-86eafde9518c", "serial_number": "", "sim_serial_number": None,
-              "launcherReferrer": "com.bbk.launcher2",
-              "fingerprint": "vivo/PD2244/PD2244:13/TP1A.220624.014/compiler01042331:user/release-keys",
-              "platform": "kona", "event": "caijing_initialization"}
+    area='+1'
+    # phone='7787665793'
+    device = device_register(proxies=proxies)  # 注册设备
+  #   device = {"install_id": "1325331944583875", "device_id": "1325331944579779", "secDeviceToken": "AvBZdrKW2BWURRNxkIZdrhUbD",
+  #             "device_token": "AAA6HFWWLSJTFZ2KCOVMG72TQXC7AHC7AXZHQYCPOGXYQ5OA4JZPKFDPQDHD2KF5MTHDNBMSU3MFR3FOYMSV73HDNG7PHWSLBOGHOIILZY7NF6E4QZNT5KWLJCJ7S",
+  #             "channel": "huawei_1128_free", "os_version": "13", "os_api": 33, "device_model": "V2244A",
+  #             "device_type": "V2244A", "device_brand": "vivo", "device_manufacturer": "vivo", "cpu_abi": "arm64-v8a",
+  #             "density_dpi": 480, "display_density": "xxhdpi", "resolution": "2400×1080",
+  #             "rom": "eng.compil.20230104.233131",
+  #             "rom_version": "qssi-user 13 TP1A.220624.014 eng.compil.20230104.233131 release-keys",
+  #             "cdid": "78c9ad45-c454-4bdb-b1ef-87251c116c8e", "openudid": "504a4fdc1691f62b",
+  #             "clientudid": "7c512082-e902-4fad-833a-86eafde9518c", "serial_number": "", "sim_serial_number": None,
+  #             "launcherReferrer": "com.bbk.launcher2",
+  #             "fingerprint": "vivo/PD2244/PD2244:13/TP1A.220624.014/compiler01042331:user/release-keys",
+  #             "platform": "kona", "event": "caijing_initialization"}
 
     # device = {
     #     'install_id': '1325331944583875',
@@ -685,14 +831,19 @@ if __name__ == '__main__':
     #     # 'device_id': '1677175443962540',
     # }
     logger.debug(f'设备注册结果：{device}')
+    a = {}
     for phone in lis:
-        phone = '16727729829'
+        phone = '7787660258'
         try:
-            result = query_phone(device=device, area_phone=f"{area} {phone}", proxies=proxies)
+            # result = query_phone(device=device, area_phone=f"{area} {phone}", proxies=proxies)
+            result = query_phone(device=device, card_name='付贵',card='612425198407151435', proxies=proxies)
+
+            handle_result(proxies,result, area, phone, a)
+            print(a)
         except Exception as e:
               result = f"查询失败：{e}"
         # result = query_phone(device=device, card_name='付贵',card='612425198407151435', proxies=proxies)
-        logger.debug(f"{phone},{result}")
+        logger.debug(f"{phone},{result},{a}")
         break
     # test('+1', '16723016113')
     # test('+1', '13193183513')
