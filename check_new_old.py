@@ -330,8 +330,7 @@ def check_new_old(area,phone,proxies_mode, proxies_url,output_lis = None):
 def run():
     global IS_RUN
     input_path = "input"
-    if not input_path:
-        os.makedirs(input_path)
+    os.makedirs(input_path,exist_ok=True)
 
     os.makedirs("查新老结果",exist_ok=True)
 
